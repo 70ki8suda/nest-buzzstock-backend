@@ -5,6 +5,7 @@ import * as cookieParser from 'cookie-parser';
 async function bootstrap() {
   const app = await NestFactory.create(AppModule);
   app.enableCors({
+    //deploy時は変わるのでこのファイルはgitignoreに含まれる
     origin: 'http://localhost:3000',
     allowedHeaders: 'Origin, X-Requested-With, Content-Type, Accept',
     credentials: true,
