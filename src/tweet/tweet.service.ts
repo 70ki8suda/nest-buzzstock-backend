@@ -152,7 +152,7 @@ export class TweetService {
       });
       let tweets = ticker_tweets.tweets;
       tweets = tweets.sort(function (a, b) {
-        if (a.created_at < b.created_at) {
+        if (a.created_at > b.created_at) {
           return -1;
         } else {
           return 1;
@@ -181,7 +181,7 @@ export class TweetService {
       const followingUsersIDs = followingUsers.following.map(
         (following) => following.id,
       );
-      const tweets = await this.prisma.tweet.findMany({
+      let tweets = await this.prisma.tweet.findMany({
         where: {
           userId: { in: followingUsersIDs },
         },
@@ -209,6 +209,13 @@ export class TweetService {
             },
           },
         },
+      });
+      tweets = tweets.sort(function (a, b) {
+        if (a.created_at > b.created_at) {
+          return -1;
+        } else {
+          return 1;
+        }
       });
       return tweets;
     } catch {
