@@ -6,6 +6,7 @@ import {
   Param,
   ParseIntPipe,
   Post,
+  Query,
   UploadedFiles,
   UseGuards,
   UseInterceptors,
@@ -58,8 +59,16 @@ export class TweetController {
   }
 
   @Get('/user/:userId')
-  async getTweetsByUserId(@Param('userId', ParseIntPipe) userId: number) {
-    const tweets = await this.tweetService.getTweetsByUserId(userId);
+  async getTweetsByUserId(
+    @Param('userId', ParseIntPipe) userId: number,
+    @Query('skip', ParseIntPipe) skip: number,
+    @Query('take', ParseIntPipe) take: number,
+  ) {
+    const tweets = await this.tweetService.getTweetsByUserId(
+      userId,
+      skip,
+      take,
+    );
     return tweets;
   }
 

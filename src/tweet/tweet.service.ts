@@ -89,9 +89,11 @@ export class TweetService {
     }
   }
 
-  async getTweetsByUserId(userId: number) {
+  async getTweetsByUserId(userId: number, skip, take) {
     try {
       const tweets = await this.prisma.tweet.findMany({
+        skip: skip,
+        take: take,
         where: {
           userId: userId,
         },
