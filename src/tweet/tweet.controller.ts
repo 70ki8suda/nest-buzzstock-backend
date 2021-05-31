@@ -44,8 +44,12 @@ export class TweetController {
   ) {
     const userId: number = user.id;
 
-    await this.tweetService.createTweet(tweet, tweet_image, userId);
-    return 'tweet posted';
+    const createTweet = await this.tweetService.createTweet(
+      tweet,
+      tweet_image,
+      userId,
+    );
+    return createTweet;
   }
 
   @Delete('/:id')
@@ -73,16 +77,32 @@ export class TweetController {
   }
 
   @Get('/quote/:ticker')
-  async getTweetsByTicker(@Param('ticker') ticker: string) {
-    const tweets = await this.tweetService.getTweetsByTicker(ticker);
+  async getTweetsByTicker(
+    @Param('ticker') ticker: string,
+    @Query('skip', ParseIntPipe) skip: number,
+    @Query('take', ParseIntPipe) take: number,
+  ) {
+    const tweets = await this.tweetService.getTweetsByTicker(
+      ticker,
+      skip,
+      take,
+    );
     return tweets;
   }
 
   @Get('/following_users_feed')
   @UseGuards(AuthGuard())
-  async getTweetsOfFollowingUsers(@GetUser() user: User) {
+  async getTweetsOfFollowingUsers(
+    @GetUser() user: User,
+    @Query('skip', ParseIntPipe) skip: number,
+    @Query('take', ParseIntPipe) take: number,
+  ) {
     const userId: number = user.id;
-    const tweets = await this.tweetService.getTweetsOfFollowingUsers(userId);
+    const tweets = await this.tweetService.getTweetsOfFollowingUsers(
+      userId,
+      skip,
+      take,
+    );
     return tweets;
   }
 }
