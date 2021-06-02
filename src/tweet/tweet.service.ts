@@ -134,6 +134,9 @@ export class TweetService {
           tweets: {
             skip: skip,
             take: take,
+            orderBy: {
+              created_at: 'desc',
+            },
             include: {
               user: {
                 select: {
@@ -158,14 +161,8 @@ export class TweetService {
           },
         },
       });
-      let tweets = ticker_tweets.tweets;
-      tweets = tweets.sort(function (a, b) {
-        if (a.created_at > b.created_at) {
-          return -1;
-        } else {
-          return 1;
-        }
-      });
+      const tweets = ticker_tweets.tweets;
+
       return tweets;
     } catch {
       new InternalServerErrorException();
@@ -189,14 +186,14 @@ export class TweetService {
       const followingUsersIDs = followingUsers.following.map(
         (following) => following.id,
       );
-      let tweets = await this.prisma.tweet.findMany({
+      const tweets = await this.prisma.tweet.findMany({
         skip: skip,
         take: take,
-        where: {
-          userId: { in: followingUsersIDs },
-        },
         orderBy: {
           created_at: 'desc',
+        },
+        where: {
+          userId: { in: followingUsersIDs },
         },
         include: {
           user: {
@@ -220,13 +217,7 @@ export class TweetService {
           },
         },
       });
-      tweets = tweets.sort(function (a, b) {
-        if (a.created_at > b.created_at) {
-          return -1;
-        } else {
-          return 1;
-        }
-      });
+
       return tweets;
     } catch {
       new InternalServerErrorException();
